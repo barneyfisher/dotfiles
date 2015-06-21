@@ -46,14 +46,18 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
+# Setup the prompt
+source ~/.bash_colours
 # Colour prompt
 #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 # Prompt with no colour
 #PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 # Return value visualisation
-source .bash_colours
-PROMPT_COMMAND='ret_code=$?; if [[ $ret_code == 0 ]]; then echo -e $Green; else echo -e $Red; fi; printf "%${COLUMNS}s" "$ret_code: $(date)"'
-PS1="$Green\u@\h:\w\$ $Colour_Off"
+#PROMPT_COMMAND='ret_code=$?; if [[ $ret_code == 0 ]]; then echo -e $Green; else echo -e $Red; fi; printf "%${COLUMNS}s" "$ret_code: $(date)"; echo -e $Colour_Off'
+#PS1="\[$Green\]\u@\h:\w\$ \[$Colour_Off\]"
+# Return value visualisation with minimal prompt
+PROMPT_COMMAND='ret_code=$?; if [[ $ret_code == 0 ]]; then echo -e $Green; else echo -e $Red; fi; printf "%${COLUMNS}s" "$(whoami)@$(hostname):$(pwd); $ret_code; $(date)"; echo -e $Colour_Off'
+PS1="\[$Green\]> \[$Colour_Off\]"
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
